@@ -2,7 +2,7 @@
 
 [![Github license](https://img.shields.io/github/license/hotstaff/tsurido)](https://github.com/hotstaff/tsurido/)
 
-Forked from (https://github.com/hotstaff/tsurido.git)
+Forked from [hotstaff/tsurido](https://github.com/hotstaff/tsurido/tree/master/sketch/tsurido-m5stickc)
 
 ## Hardware
 
