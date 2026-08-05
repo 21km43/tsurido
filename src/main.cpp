@@ -197,7 +197,7 @@ void setup()
   Serial.begin(BAUDRATE);
   Serial.flush();
 
-  changeCPUFreq(CPU_FREQ);
+  setCpuFrequencyMhz(CPU_FREQ_HIGH);
 
   WiFi.mode(WIFI_OFF);
   btStop();
