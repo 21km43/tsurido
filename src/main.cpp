@@ -76,6 +76,11 @@ void updateStateBATT()
 {
   if (!M5.Power.isCharging() && batt_charge < 10)
   {
+    for (int i = 0; i < 3; i++)
+    {
+      M5.Speaker.tone(4000, 250);
+      delay(500);
+    }
     pm1.shutdown();
   }
 
@@ -171,8 +176,7 @@ bool warn(double *outlier)
     {
       lastring = millis();
       ring = true;
-      M5.Speaker.setVolume(128);
-      M5.Speaker.tone(880, 1000);
+      M5.Speaker.tone(4000, 1000);
       Serial.println("Warning: Outlier detected!");
     }
     else
