@@ -1,15 +1,13 @@
 /*****************************************************************************/
 //  Function:    Get the accelemeter of X/Y/Z axis and print out on the
-//                  serial monitor and bluetooth.
+//                  serial monitor.
 //  Usage:       This program is for fishing. Use the accelerometer at the end
-//               of the rod to see if the fish is caught. Acceleration is
-//               transmitted in real time via Bluetooth and can be monitored
-//               from a laptop.
-//  Hardware:    M5StickC + ADXL345(Grove)
-//  Arduino IDE: Arduino-1.8.13
-//  Author:  Hideto Manjo
-//  Date:    Aug 9, 2020
-//  Version: v0.3
+//               of the rod to see if the fish is caught.
+//  Hardware:    M5StickS3
+//  PlatformIO:  platform = espressif32@6.12.0, framework = arduino
+//  Author:  Koki Mizumoto (Original: Hideto Manjo)
+//  Date:    Aug 5, 2026
+//  Version: v0.4
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
@@ -33,12 +31,13 @@
 #define USE_INTERNAL_IMU true // Use internal IMU unit as acc sensor
 
 // basic
-#define LCD_ROTATION 0  // 90 * num (degree) [Counterclockwise]
-#define SCREENBREATH 12 // LCD brightness (max 12)
-#define DELAY 50        // milliseconds
-#define BAUDRATE 115200 // Serial communication baud rate
-#define CPU_FREQ 240    // Set FREQ MHz -> 240 or 160
-                        // (80, 40, 20, 10) is not work normally
+#define LCD_ROTATION 0    // 90 * num (degree) [Counterclockwise]
+#define SCREENBREATH 12   // LCD brightness (max 12)
+#define DELAY 50          // milliseconds
+#define BAUDRATE 115200   // Serial communication baud rate
+#define CPU_FREQ_HIGH 160 // Set FREQ MHz (normal mode)
+#define CPU_FREQ_HIGH 40  // Set FREQ MHz (low energy mode)
+
 // warning
 #define ONLINE_BUFFER_SIZE 200 // Buffer size for statisics
                                // (must be define before online.h)
@@ -71,12 +70,6 @@ inline double SCALAR(int x, int y, int z)
         x * x +
         y * y +
         z * z);
-}
-
-void changeCPUFreq(int freq)
-{
-  while (!setCpuFrequencyMhz(freq))
-    ;
 }
 
 void updateStateBATT()
@@ -269,17 +262,16 @@ void loop()
 
   if (M5.BtnB.wasPressed())
   {
-
     if (lowEnergyMode)
     {
-      changeCPUFreq(CPU_FREQ);
+      setCpuFrequencyMhz(CPU_FREQ_HIGH);
       M5.Display.wakeup();
       M5.Display.setBrightness(SCREENBREATH);
       lowEnergyMode = false;
     }
     else
     {
-      changeCPUFreq(80);
+      setCpuFrequencyMhz(CPU_FRE_LOW);
       M5.Display.sleep();
       lowEnergyMode = true;
     }
@@ -287,7 +279,6 @@ void loop()
 
   if (!lowEnergyMode)
   {
-
     if (M5.BtnA.wasPressed())
     {
       plotEnabled = !plotEnabled;
