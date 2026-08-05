@@ -254,7 +254,7 @@ void loop()
 
   // get Accelerometer data
   read_acc(&x, &y, &z);
-  scalar = SCALLAR(x, y, z);
+  scalar = SCALAR(x, y, z);
 
   OL.get_stat(&scalar, &mean, &standard);
   diff = (int)abs(scalar - mean);
