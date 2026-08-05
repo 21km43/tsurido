@@ -31,12 +31,12 @@
 #define USE_INTERNAL_IMU true // Use internal IMU unit as acc sensor
 
 // basic
-#define LCD_ROTATION 0    // 90 * num (degree) [Counterclockwise]
-#define SCREENBREATH 12   // LCD brightness (max 12)
-#define DELAY 50          // milliseconds
-#define BAUDRATE 115200   // Serial communication baud rate
-#define CPU_FREQ_HIGH 160 // Set FREQ MHz (normal mode)
-#define CPU_FREQ_HIGH 40  // Set FREQ MHz (low energy mode)
+#define LCD_ROTATION 0   // 90 * num (degree) [Counterclockwise]
+#define SCREENBREATH 12  // LCD brightness (max 12)
+#define DELAY 50         // milliseconds
+#define BAUDRATE 115200  // Serial communication baud rate
+#define CPU_FREQ_HIGH 80 // Set FREQ MHz (normal mode)
+#define CPU_FREQ_LOW  10 // Set FREQ MHz (low energy mode)
 
 // warning
 #define ONLINE_BUFFER_SIZE 200 // Buffer size for statisics
@@ -171,8 +171,8 @@ bool warn(double *outlier)
     {
       lastring = millis();
       ring = true;
-      // M5.Speaker.setVolume(128);
-      // M5.Speaker.tone(880, 1000);
+      M5.Speaker.setVolume(128);
+      M5.Speaker.tone(880, 1000);
       Serial.println("Warning: Outlier detected!");
     }
     else
@@ -271,7 +271,7 @@ void loop()
     }
     else
     {
-      setCpuFrequencyMhz(CPU_FRE_LOW);
+      setCpuFrequencyMhz(CPU_FREQ_LOW);
       M5.Display.sleep();
       lowEnergyMode = true;
     }
