@@ -52,8 +52,6 @@
 #define OFFSET_MENU 2  // Menu
 #define OFFSET_MAIN 12 // Main
 
-#define SCALAR(x, y, z) sqrt(x *x + y * y + z * z)
-
 #include "online.h"
 
 // FLAGS
@@ -66,6 +64,14 @@ bool lowEnergyMode = false;
 int batt_charge = 100;
 
 M5PM1 pm1;
+
+inline double SCALAR(int x, int y, int z)
+{
+    return std::sqrt(
+        x * x +
+        y * y +
+        z * z);
+}
 
 void changeCPUFreq(int freq)
 {
@@ -248,7 +254,7 @@ void loop()
 
   // get Accelerometer data
   read_acc(&x, &y, &z);
-  scalar = SCALAR(x, y, z);
+  scalar = SCALLAR(x, y, z);
 
   OL.get_stat(&scalar, &mean, &standard);
   diff = (int)abs(scalar - mean);
