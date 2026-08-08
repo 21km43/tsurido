@@ -35,8 +35,7 @@
 #define SCREENBREATH 12  // LCD brightness (max 12)
 #define DELAY 50         // milliseconds
 #define BAUDRATE 115200  // Serial communication baud rate
-#define CPU_FREQ_HIGH 80 // Set FREQ MHz (normal mode)
-#define CPU_FREQ_LOW  10 // Set FREQ MHz (low energy mode)
+#define CPU_FREQ 80      // Set FREQ
 
 // warning
 #define ONLINE_BUFFER_SIZE 200 // Buffer size for statisics
@@ -201,7 +200,7 @@ void setup()
   Serial.begin(BAUDRATE);
   Serial.flush();
 
-  setCpuFrequencyMhz(CPU_FREQ_HIGH);
+  setCpuFrequencyMhz(CPU_FREQ);
 
   WiFi.mode(WIFI_OFF);
   btStop();
@@ -249,6 +248,8 @@ void loop()
   long t = millis();
   long wait = 0;
 
+  M5.update();
+
   // get Accelerometer data
   read_acc(&x, &y, &z);
   scalar = SCALAR(x, y, z);
@@ -256,6 +257,7 @@ void loop()
   OL.get_stat(&scalar, &mean, &standard);
   diff = (int)abs(scalar - mean);
   outlier = diff / standard;
+  warn(&outlier);
 
   // get battery charge(%)
   batt_charge = battery_charge();
@@ -268,14 +270,12 @@ void loop()
   {
     if (lowEnergyMode)
     {
-      setCpuFrequencyMhz(CPU_FREQ_HIGH);
       M5.Display.wakeup();
       M5.Display.setBrightness(SCREENBREATH);
       lowEnergyMode = false;
     }
     else
     {
-      setCpuFrequencyMhz(CPU_FREQ_LOW);
       M5.Display.sleep();
       lowEnergyMode = true;
     }
@@ -304,8 +304,6 @@ void loop()
       }
     }
 
-    warn(&outlier);
-
     if (plotEnabled)
     {
       plot(&diff, &standard);
@@ -318,10 +316,7 @@ void loop()
       M5.Display.setTextColor(WHITE, BLACK);
       M5.Display.printf("%5d", scalar);
     }
-
   }
-
-  M5.update();
 
   wait = DELAY - (millis() - t);
   if (wait > 0)
